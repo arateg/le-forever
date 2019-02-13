@@ -30,11 +30,11 @@ if [ -f $cert_path ]; then
     unset IFS
     certs_domains_diff=$(echo ${sorted_currents_certs[@]} ${sorted_hostnames[@]} | tr ' ' '\n' | sort | uniq -u)
     # IF new names then create new certificate, but make backup it at first. Later copy new cert to cert_dir
-    if [-z "$certs_domains_diff"]; then
+    if [[ certs_domains_diff ]]; then
         # Directory could be named by another domain
         cp -fv /etc/letsencrypt/live/$domain_cert_dir . /etc/nginx/certificates/backup 2>/dev.null
         certbot certonly --email ${EMAIL} --renew-by-default --agree-tos --expand --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
-        update_cert_result=$?
+        le_result=$?
         cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
     fi
 fi
@@ -42,20 +42,18 @@ fi
 #If no cert.pem create certificate
 if [ ! -f $cert_path ]; then
     certbot certonly --email ${EMAIL} --agree-tos --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
-    update_cert_result
+    le_result=$?
     cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
 fi
 
+
 # cp twice. I thought to create COPY independent but  there is a possible
 # situation when file exists, domains are the same but first domain name is different. So path to cert could differ
-
-
-# Commented because last command became "copy" but was letsencrypt early
-# le_result=$?
-# if [ ${le_result} -ne 0 ]; then
-#    echo "failed to run certbot"
-#    return 1
-# fi
+]
+if [[ -v le_result ]] && [ "$le_result" -ne 0 ]; then
+   echo "failed to run certbot"
+   return 1
+fi
 
 #check 30 days before cron
 /scripts/crons/cert_update.sh
