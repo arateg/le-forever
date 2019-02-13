@@ -1,21 +1,21 @@
 FROM nginx:stable-alpine
 
-ENV HOSTNAMES=www.example.com \
+ENV HOSTNAMES=example.com,www.example.com \
     EMAIL=_@_._ \
     TIME_ZONE=Europe/Minsk
 
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx/services/ /etc/nginx/conf.d/
 
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf/ \
-     ./nginx/services/ /etc/nginx/conf.d/ \
-     ./scripts/ /scripts/
-
-RUN  apk add --no-cache --update bash openssl tzdata && \
-     mkdir -p mkdir /scripts /etc/nginx/conf.d /etc/nginx/certificates/backup && \
+RUN  apk add --no-cache --update bash certbot openssl tzdata && \
+     mkdir -p mkdir /scripts /etc/nginx/certificates/backup && \
      echo "daemon off;" >> /etc/nginx/nginx.conf && \
      cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime && \
-     echo "${TIME_ZONE}" > /etc/timezone && \
-     chmod +x /scripts/crons/cert_update.sh && \
+     echo "${TIME_ZONE}" > /etc/timezone
+
+COPY ./scripts/ /scripts/
+
+RUN  chmod +x /scripts/crons/cert_update.sh && \
      chmod +x /scripts/init.sh
 
-
-ENTRYPOINT ["/opt/letsencrypt/init.sh"]
+ENTRYPOINT ["/scripts/init.sh"]

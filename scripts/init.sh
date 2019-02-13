@@ -1,15 +1,15 @@
 #!/bin/bash
 
-git clone https://github.com/letsencrypt/letsencrypt --branch v0.31.0 /opt/letsencrypt
+# git clone https://github.com/letsencrypt/letsencrypt --branch v0.31.0 /opt/letsencrypt
 
 SSL_CERT=/etc/nginx/certificates/fullchain.pem
 SSL_KEY=/etc/nginx/certificates/privkey.pem
 SSL_CHAIN_CERT=/etc/nginx/certificates/chain.pem
-
+echo $(ls -la /etc/nginx/conf.d/)
 # Replace SSL_* for path of files
-sed -i "s/SSL_KEY/${SSL_KEY}/g" /etc/nginx/conf.d/*.conf
-sed -i "s/SSL_CERT/${SSL_CERT}/g" /etc/nginx/conf.d/*.conf
-sed -i "s/SSL_CHAIN_CERT/${SSL_CHAIN_CERT}/g" /etc/nginx/conf.d/*.conf
+sed -i "s~SSL_CERT~${SSL_CERT}~g" /etc/nginx/conf.d/*.conf
+sed -i "s~SSL_KEY~${SSL_KEY}~g" /etc/nginx/conf.d/*.conf
+sed -i "s~SSL_CHAIN_CERT~${SSL_CHAIN_CERT}~g" /etc/nginx/conf.d/*.conf
 
 # Maybe if someone decide to write HOSTNAMES="example.com, www.example.com"
 echo export hostnames=$(echo $HOSTNAMES | sed "s/ //g") >> ~/custom_envs
@@ -33,14 +33,14 @@ if [ -f $cert_path ]; then
     if [-z "$certs_domains_diff"]; then
         # Directory could be named by another domain
         cp -fv /etc/letsencrypt/live/$domain_cert_dir . /etc/nginx/certificates/backup 2>/dev.null
-        /opt/letsencrypt/letsencrypt-auto certonly --email ${EMAIL} --renew-by-default --agree-tos --expand --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
+        certbot certonly --email ${EMAIL} --renew-by-default --agree-tos --expand --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
         cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
     fi
 fi
 
 #If no cert.pem create certificate
-if [! -f $cert_path ]; then
-    /opt/letsencrypt/letsencrypt-auto certonly --email ${EMAIL} --agree-tos --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
+if [ ! -f $cert_path ]; then
+    certbot certonly --email ${EMAIL} --agree-tos --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
     cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
 fi
 
