@@ -1,4 +1,4 @@
 domain_cert_dir=$(echo $HOSTNAMES | cut -d"," -f1)
 cert_path=/etc/nginx/certificates/cert.pem
 
-@monthly /opt/letsencrypt/crons/cert_update.sh
+@monthly /scripts/crons/cert_update.sh

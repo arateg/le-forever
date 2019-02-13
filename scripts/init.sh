@@ -38,7 +38,7 @@ fi
 
 #If no cert.pem create certificate
 if [! -f $cert_path ]; then
-    opt/letsencrypt/letsencrypt-auto certonly --email ${EMAIL} --agree-tos --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
+    /opt/letsencrypt/letsencrypt-auto certonly --email ${EMAIL} --agree-tos --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
     cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
 fi
 
@@ -54,7 +54,7 @@ fi
 # fi
 
 #check 30 days before cron
-/opt/letsencrypt/crons/cert_update.sh
+/scripts/crons/cert_update.sh
 # ========== Script for crontab for updating =======
 # Run monthly
-crontab /opt/letsencrypt/crons/cron_renew
+crontab /scripts/crons/cron_renew
