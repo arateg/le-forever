@@ -7,7 +7,7 @@ export hostnames=$(echo $HOSTNAMES | sed "s/ //g")
 # Ends with status code 1 if it will expired or 0 if it will not
 if openssl x509 -checkend $thirty_days -noout -in $cert_path; then
     # make backup, create new cert and copy to cert_path
-    cp -fv /etc/letsencrypt/live/$domain_cert_dir . /etc/nginx/certificates/backup
+    cp -fv /etc/letsencrypt/live/$domain_cert_dir . /etc/nginx/certificates/backup 2>/dev.null # Before first renew could be different path
     /opt/letsencrypt/letsencrypt-auto certonly --email ${EMAIL} --agree-tos --renew-by-default --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
     # If update was good
     le_result=$?

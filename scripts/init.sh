@@ -46,7 +46,7 @@ fi
 # situation when file exists, domains are the same but first domain name is different. So path to cert could differ
 
 
-# Commented because last command began "copy"
+# Commented because last command became "copy" but was letsencrypt early
 # le_result=$?
 # if [ ${le_result} -ne 0 ]; then
 #    echo "failed to run certbot"
