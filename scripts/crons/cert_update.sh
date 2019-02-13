@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+source ~/custom_envs
 
 thirty_days=2592000
 export hostnames=$(echo $HOSTNAMES | sed "s/ //g")

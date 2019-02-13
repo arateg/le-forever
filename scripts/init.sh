@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 git clone https://github.com/letsencrypt/letsencrypt --branch v0.31.0 /opt/letsencrypt
 
@@ -12,10 +12,12 @@ sed -i "s/SSL_CERT/${SSL_CERT}/g" /etc/nginx/conf.d/*.conf
 sed -i "s/SSL_CHAIN_CERT/${SSL_CHAIN_CERT}/g" /etc/nginx/conf.d/*.conf
 
 # Maybe if someone decide to write HOSTNAMES="example.com, www.example.com"
-export hostnames=$(echo $HOSTNAMES | sed "s/ //g")
+echo export hostnames=$(echo $HOSTNAMES | sed "s/ //g") >> ~/custom_envs
 # name of first domain
-export domain_cert_dir=$(echo $HOSTNAMES | cut -d"," -f1)
-export cert_path=/etc/nginx/certificates/cert.pem
+echo export domain_cert_dir=$(echo $HOSTNAMES | cut -d"," -f1) >> ~/custom_envs
+echo export cert_path=/etc/nginx/certificates/cert.pem >> ~/custom_envs
+
+source ~/custom_envs
 
 # If certificate exists, then chack domains
 if [ -f $cert_path ]; then
@@ -58,3 +60,5 @@ fi
 # ========== Script for crontab for updating =======
 # Run monthly
 crontab /scripts/crons/cron_renew
+
+return 0
