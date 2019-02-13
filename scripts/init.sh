@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# git clone https://github.com/letsencrypt/letsencrypt --branch v0.31.0 /opt/letsencrypt
-
 SSL_CERT=/etc/nginx/certificates/fullchain.pem
 SSL_KEY=/etc/nginx/certificates/privkey.pem
 SSL_CHAIN_CERT=/etc/nginx/certificates/chain.pem
+
 echo $(ls -la /etc/nginx/conf.d/)
+
 # Replace SSL_* for path of files
 sed -i "s~SSL_CERT~${SSL_CERT}~g" /etc/nginx/conf.d/*.conf
 sed -i "s~SSL_KEY~${SSL_KEY}~g" /etc/nginx/conf.d/*.conf
@@ -34,6 +34,7 @@ if [ -f $cert_path ]; then
         # Directory could be named by another domain
         cp -fv /etc/letsencrypt/live/$domain_cert_dir . /etc/nginx/certificates/backup 2>/dev.null
         certbot certonly --email ${EMAIL} --renew-by-default --agree-tos --expand --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
+        update_cert_result=$?
         cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
     fi
 fi
@@ -41,6 +42,7 @@ fi
 #If no cert.pem create certificate
 if [ ! -f $cert_path ]; then
     certbot certonly --email ${EMAIL} --agree-tos --non-interactive --webroot -w /usr/share/nginx/html -d $hostnames
+    update_cert_result
     cp -fv /etc/letsencrypt/live/$domain_cert_dir . $cert_path
 fi
 

@@ -1,0 +1,20 @@
+version: '3'
+services:
+    nginx:
+        build:
+          context: .
+          args:
+          - TIME_ZONE=Europe/Minsk
+        hostname: nginx
+        restart: always
+        container_name: nginx
+        volumes:
+            - ./certificate:/etc/nginx/certificates/
+            - ./nginx/services:/etc/nginx/service.conf
+            - ./logs:/var/log/letsencrypt/
+        ports:
+            - "80:80"
+            - "443:443"
+        environment:
+            - HOSTNAMES=example.com,www.example.com
+            - EMAIL=your@email.com

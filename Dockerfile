@@ -1,17 +1,19 @@
 FROM nginx:stable-alpine
 
-ENV HOSTNAMES=example.com,www.example.com \
-    EMAIL=_@_._ \
-    TIME_ZONE=Europe/Minsk
+ARG TIME_ZONE
+ENV TZ=${TIME_ZONE}
 
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/services/ /etc/nginx/conf.d/
 
 RUN  apk add --no-cache --update bash certbot openssl tzdata && \
      mkdir -p mkdir /scripts /etc/nginx/certificates/backup && \
-     echo "daemon off;" >> /etc/nginx/nginx.conf && \
-     cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime && \
-     echo "${TIME_ZONE}" > /etc/timezone
+     rm /etc/nginx/conf.d/default.conf && \
+     echo "daemon off;" >> /etc/nginx/nginx.conf
+
+
+RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" >> /etc/timezone
 
 COPY ./scripts/ /scripts/
 
