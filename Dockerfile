@@ -20,4 +20,4 @@ COPY ./scripts/ /scripts/
 RUN  chmod +x /scripts/crons/cert_update.sh && \
      chmod +x /scripts/init.sh
 
-ENTRYPOINT ["/scripts/init.sh"]
+CMD ["/scripts/init.sh"]
