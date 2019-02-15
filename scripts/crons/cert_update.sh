@@ -4,7 +4,6 @@ source ~/custom_envs
 
 thirty_days=2592000
 
-echo $(openssl x509 -checkend $thirty_days -noout -in ${cert_fullchain})
 
 # Ends with status code 1 if it will expired or 0 if it will not
 if ! openssl x509 -checkend $thirty_days -noout -in $cert_fullchain ; then
