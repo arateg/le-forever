@@ -10,7 +10,7 @@ services:
         container_name: nginx
         volumes:
             - ../certificates:/etc/nginx/certificates/
-            - ./nginx/services:/etc/nginx/service.conf
+            - ./nginx/services:/etc/nginx/outside
             - ../letsencrypt_logs:/var/log/letsencrypt/
         ports:
             - "80:80"

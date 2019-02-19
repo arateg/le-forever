@@ -19,7 +19,7 @@ if ! openssl x509 -checkend $thirty_days -noout -in $cert_fullchain ; then
         exit 1
     fi
 
-    cp -fv /etc/letsencrypt/live/$domain_cert_dir/* ${cert_path}/ 2>/dev/null
+    cp -fv /etc/letsencrypt/live/$domain_cert_dir/* ${certs_path}/ 2>/dev/null
     echo "Reloading NGINX"
     nginx -s reload
 fi
