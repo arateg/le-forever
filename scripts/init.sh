@@ -22,12 +22,12 @@ sed -i "s~SSL_CHAIN_CERT~${SSL_CHAIN_CERT}~g" /etc/nginx/conf.d/*.conf
 mv -v /etc/nginx/conf.d /etc/nginx/moved
 crontab /scripts/crons/cron_renew
 
-
 # Return configs
 (
     sleep 5
     mv -v /etc/nginx/moved /etc/nginx/conf.d
     /scripts/create_certs.sh
+    # reload because upper script can not reload nginx but configs were moved
     nginx -s reload
 ) &
 
