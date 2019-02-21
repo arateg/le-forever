@@ -2,7 +2,7 @@
 
 TZ=${TIME_ZONE:-Europe/Minsk}
 cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-echo ${TZ} > /etc/timezone
+echo ${TZ} > /etc/timezone && \
 
 cp /etc/nginx/outside/* /etc/nginx/conf.d/
 
