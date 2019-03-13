@@ -16,5 +16,5 @@ services:
             - "80:80"
             - "443:443"
         environment:
-            - HOSTNAMES=docker.arateg.by,docker2.arateg.by
-            - EMAIL=v.arykau@arateg.by
+            - HOSTNAMES=host.com,host-two.com
+            - EMAIL=owner@gmail.com

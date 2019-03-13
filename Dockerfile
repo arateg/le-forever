@@ -11,8 +11,7 @@ RUN  apk add --no-cache --update bash certbot openssl tzdata && \
 
 COPY /scripts/ /scripts/
 
-RUN  chmod +x /scripts/crons/cert_update.sh \
-              /scripts/init.sh \
+RUN  chmod +x /scripts/init.sh \
               /scripts/create_variables.sh \
               /scripts/create_certs.sh
 
